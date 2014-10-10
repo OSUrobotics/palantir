@@ -106,8 +106,6 @@ def _parse_arg(tag, context):
             return (name, _get_arg_value(tag, context))
     else:
         return (name, _get_arg_value(tag, context))
-    # nothing to return (no value, or conditional wasn't satisfied)
-    return None
 
 def _parse_subcontext(tags, context):
     subcontext = {'arg': {}}
@@ -117,11 +115,8 @@ def _parse_subcontext(tags, context):
     
     for tag in [t for t in tags if t.nodeType == DomNode.ELEMENT_NODE]:
         if tag.tagName == 'arg':
-            # None is returned for args with if/unless that evaluate to false
-            ret = _parse_arg(tag, context)
-            if ret is not None:
-                (name, val) = ret
-                subcontext['arg'][name] = val
+            (name, val) = _parse_arg(tag, context)
+            subcontext['arg'][name] = val
     return subcontext
 
 def _parse_launch(tags, launch_file, file_deps, verbose, context):

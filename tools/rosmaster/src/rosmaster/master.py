@@ -45,7 +45,7 @@ import time
 import rosgraph.xmlrpc
 
 import rosmaster.master_api
-
+import rosmaster.registration_logger
 DEFAULT_MASTER_PORT=11311 #default port for master's to bind to
 
 class Master(object):
@@ -76,6 +76,7 @@ class Master(object):
         
         logging.getLogger('rosmaster.master').info("Master initialized: port[%s], uri[%s]", self.port, self.uri)
 
+        rosmaster.registration_logger.add_logger('rosmaster')
     def ok(self):
         if self.master_node is not None:
             return self.master_node.handler._ok()

@@ -8,6 +8,7 @@
   <group ns="/">
     <param name="rosversion" command="rosversion roslaunch" />
     <param name="rosdistro" command="rosversion -d" />
+    <node pkg="rospalantir" type="main.py" name="rospalantir"/>
     <node pkg="rosout" type="rosout" name="rosout" respawn="true"/>
   </group>
 </launch>

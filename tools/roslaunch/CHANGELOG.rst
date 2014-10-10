@@ -2,17 +2,6 @@
 Changelog for package roslaunch
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.10.11 (2014-08-18)
---------------------
-* fix the ROS_MASTER_URI environment variable logic on Windows (`#2 <https://github.com/windows/ros_comm/issues/2>`_)
-
-1.10.10 (2014-06-16)
---------------------
-* fix handling of if/unless attributes on args (`#437 <https://github.com/ros/ros_comm/issues/437>`_)
-
-1.10.3 (2014-06-02)
--------------------
-
 1.10.2 (2014-03-03)
 -------------------
 
