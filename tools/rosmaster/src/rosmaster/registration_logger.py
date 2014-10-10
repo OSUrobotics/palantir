@@ -93,7 +93,8 @@ class RegistrationParser(object):
         "env[" : self.parse_environment,
         "... successfully launched" : self.success_launch,
         "process has died" : self.crashed_process,
-        "killing os process" : self.killing_process}
+        "killing os process" : self.killing_process,
+        "process has finished cleanly" : self.killing_process}
 
     def unregister_publisher(self,record):
         msg = RegistrationLogger()
@@ -218,7 +219,13 @@ class RegistrationParser(object):
         return msg
 
     def killing_process(self, record):
-        if(record.args[0].split('-',1)[0] == 'master'):
+        process_name = ""
+        if "process has finished cleanly" in record.msg:
+            log = record.msg
+            process_name = log[log.find('[')+1:log.find(']')].split('-',1)[0]
+        else:
+            process_name = record.args[0].split('-',1)[0]    
+        if(process_name == 'master'):
             msg = LaunchLogger()
             msg.stamp = rospy.Time.now()
             msg.process_name = record.args[0].split('-',1)[0]
@@ -227,7 +234,7 @@ class RegistrationParser(object):
             return msg
         msg = LaunchLogger()
         msg.stamp = rospy.Time.now()
-        msg.process_name = record.args[0].split('-',1)[0]
+        msg.process_name = process_name
         msg.node_name = self.processToNodeName[msg.process_name]
         msg.register = 0
         return msg
