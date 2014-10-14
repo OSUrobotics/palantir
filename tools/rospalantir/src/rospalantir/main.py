@@ -229,6 +229,12 @@ class Palantir(object):
         Simply outputs the topic and node metadata to XML. Runs atexit.
         ROSpalantir files are saved as ~/.ros/log/rospalantir-*.
         """
+        #Opt-In Level:
+        level = os.environ['ROS_PALANTIR']
+        if level == "None":
+            return
+
+
         self.preprocess_xml()
 
         doc = Document()
@@ -236,13 +242,17 @@ class Palantir(object):
         doc.appendChild(root)
 
         #User Info
-        user = doc.createElement('user')
-        root.appendChild(user)
-        mac = doc.createElement('mac')
-        mac_content = doc.createTextNode(str(get_mac()))
-        mac.appendChild(mac_content)
-        user.appendChild(mac)
+        if level == "1":
+            user = doc.createElement('user')
+            root.appendChild(user)
+            mac = doc.createElement('mac')
+            mac_content = doc.createTextNode(str(get_mac()))
+            mac.appendChild(mac_content)
+            user.appendChild(mac)
 
+        if level == "1" or level == "2":
+            #Get IP
+        
         #Msgs
         msgs = doc.createElement('msgs')
         root.appendChild(msgs)
