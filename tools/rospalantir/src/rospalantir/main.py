@@ -250,9 +250,9 @@ class Palantir(object):
             mac.appendChild(mac_content)
             user.appendChild(mac)
 
-        if level == "1" or level == "2":
+        #if level == "1" or level == "2":
             #Get IP
-        
+
         #Msgs
         msgs = doc.createElement('msgs')
         root.appendChild(msgs)
@@ -335,7 +335,14 @@ class Palantir(object):
         file_dir = log_dir + "/rospalantir-" + date_time + ".xml"
         f = open(file_dir,'a')
         f.write(doc.toprettyxml(indent="    ", encoding="utf-8"))
-
+        response = os.system('ping -c 1 robotics.oregonstate.edu')
+        #rospy.logerr("GOT HERE")
+        #if response == 0:
+        #    rospy.logerr("GOT HERE")
+        #    rp = rospkg.RosPack()
+        #    path = rp.get_path('rospalantir')
+        #    path += "/src/rospalantir/rospalantir_to_server.php " + log_dir + "/"
+        #    os.system("php " + path)
 
 if __name__ == "__main__":
     a = Palantir()
