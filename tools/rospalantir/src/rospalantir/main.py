@@ -15,13 +15,13 @@ import rostopic
 from rosgraph_msgs.msg import Log
 from uuid import getnode as get_mac
 
-class Komodo(object):
+class Palantir(object):
     """
     Monitor class for compiling node and topic metadata. Launches from roscore.xml. Remove if this compilation is undesirable.
     Subscribes to the registration and launch loggers, compiles this data and ouputs it to xml when roscore shuts down.
     """
     def __init__(self):
-        rospy.init_node('roskomodo', log_level=rospy.DEBUG)
+        rospy.init_node('rospalantir', log_level=rospy.DEBUG)
         self.sub_registration = rospy.Subscriber('/registration_logger', RegistrationLogger, self.reg_callback)
         self.sub_launch = rospy.Subscriber('/launch_logger', LaunchLogger, self.launch_callback)
         self.registeredList = list()
@@ -35,14 +35,14 @@ class Komodo(object):
 
     def register_preexisting(self):
         """
-        For services/topics that exist when roskomodo begins. Assume they started
-        approx. at the same time roskomodo did, since roskomodo is in roscore. 
+        For services/topics that exist when rospalantir begins. Assume they started
+        approx. at the same time rospalantir did, since rospalantir is in roscore. 
         """
 
         master_uri = os.environ.get(rosgraph.ROS_MASTER_URI, None)
         self.master = xmlrpclib.ServerProxy(master_uri)
-        s = self.master.getSystemState('/roskomodo')
-        tt = self.master.getTopicTypes('/roskomodo')
+        s = self.master.getSystemState('/rospalantir')
+        tt = self.master.getTopicTypes('/rospalantir')
         topicTypes = tt[2]
         publishers = s[2][0]
         subscribers = s[2][1]
@@ -107,7 +107,7 @@ class Komodo(object):
         """
         Find the connections between topics and nodes. i.e. which node subscribes to topic published by node msg.node_name.
         """
-        master2 = rosgraph.Master('/roskomodo')
+        master2 = rosgraph.Master('/rospalantir')
         s2 = master2.getSystemState()
         rospy.logerr(msg.process_name)
         node_api = rosnode.get_api_uri(master2, msg.process_name)
@@ -149,8 +149,8 @@ class Komodo(object):
 
 
         if(msg.register == 0):
-            #If the msg trying to unregister is roskomodo, everything is being shut down. Print and quit.
-            if msg.process_name == 'roskomodo' and msg.node_name == 'main':
+            #If the msg trying to unregister is rospalantir, everything is being shut down. Print and quit.
+            if msg.process_name == 'rospalantir' and msg.node_name == 'main':
                 #self.output_xml()
                 return
             rospy.logdebug('Node Error: ' + msg.node_name + ' did not find match when unregistering node')
@@ -187,11 +187,11 @@ class Komodo(object):
         """
         Associates the topic type with the topic.
         Finds any potential errors and either fixes or deletes them.
-        Error: If the duration of a topic/node is 0. If a part of the roscore (roskomodo, main, rosout) make the termination time the current time.
+        Error: If the duration of a topic/node is 0. If a part of the roscore (rospalantir, main, rosout) make the termination time the current time.
         Otherwise delete.
         Error: If there is no mapping from the process_name (Name given by user/OS) and node_name (Executable), delete.
         """
-        tt = self.master.getTopicTypes('/roskomodo')
+        tt = self.master.getTopicTypes('/rospalantir')
         topicTypes = tt[2]
 
         ind = 0
@@ -208,10 +208,10 @@ class Komodo(object):
                 continue
             node_name = self.processNameToNode[process_name]
             
-            #Fix duration if node shuts down *after* roskomodo. Otherwise it's an error and delete it
+            #Fix duration if node shuts down *after* rospalantir. Otherwise it's an error and delete it
             if msg.duration == 0:
                 node_name = self.processNameToNode[process_name]
-                if "roskomodo" in node_name or "main" in node_name or "rosout" in node_name:
+                if "rospalantir" in node_name or "main" in node_name or "rosout" in node_name:
                     msg.duration = rospy.Time.now().to_sec() - msg.stamp.to_sec()
             
             for t in topicTypes:
@@ -227,7 +227,7 @@ class Komodo(object):
     def output_xml(self):
         """
         Simply outputs the topic and node metadata to XML. Runs atexit.
-        ROSKomodo files are saved as ~/.ros/log/roskomodo-*.
+        ROSpalantir files are saved as ~/.ros/log/rospalantir-*.
         """
         self.preprocess_xml()
 
@@ -322,13 +322,13 @@ class Komodo(object):
 
         log_dir = rospkg.get_log_dir()
         date_time = time.strftime("%j-%H-%M-%S")
-        file_dir = log_dir + "/roskomodo-" + date_time + ".xml"
+        file_dir = log_dir + "/rospalantir-" + date_time + ".xml"
         f = open(file_dir,'a')
         f.write(doc.toprettyxml(indent="    ", encoding="utf-8"))
 
 
 if __name__ == "__main__":
-    a = Komodo()
+    a = Palantir()
     import atexit
     atexit.register(a.output_xml)
     rospy.spin()
