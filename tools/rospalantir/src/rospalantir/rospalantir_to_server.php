@@ -2,18 +2,16 @@
 
  $files = scandir($argv[1]);
 
-
  $palantirFiles = preg_grep("/^rospalantir.*/", $files);
+ file_put_contents("/nfs/attic/smartw/users/curranw/palantir_backup/blah",  $palantirFiles);
 
- var_dump($palantirFiles);
-
-
+ if (!file_exists($argv[1] . "sent_logs"))
+ {
+ 	mkdir($argv[1] . "sent_logs", 0777, true);
+ }
  foreach ($palantirFiles as $palantirFile)
  {
  	$palantirFileFullPath = $argv[1] . "" . $palantirFile;
- 	print($palantirFileFullPath);
- 	#$fileContents = file_get_contents($palantirFile);
- 	#print($fileContents);
  	$xml = simplexml_load_file($palantirFileFullPath);
 
  	$url = 'http://robotics.oregonstate.edu/test/palantir/recieve_file.php';
@@ -29,14 +27,9 @@
 	);
 	$context  = stream_context_create($options);
 	$result = file_get_contents($url, false, $context);
-
-	var_dump($result);
-
-
- 	#foreach ($xml->msgs as $msg)
- 	#{
- 	#	var_dump($msg);
- 	#}
- 	#unset($xml);
+	if ($result != False)
+	{
+		rename( $palantirFileFullPath, $argv[1] . "sent_logs/" . $palantirFile);
+	}
  }
  ?>
