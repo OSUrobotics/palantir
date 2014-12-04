@@ -3,7 +3,6 @@
  $files = scandir($argv[1]);
 
  $palantirFiles = preg_grep("/^rospalantir.*/", $files);
- file_put_contents("/nfs/attic/smartw/users/curranw/palantir_backup/blah",  $palantirFiles);
 
  if (!file_exists($argv[1] . "sent_logs"))
  {
