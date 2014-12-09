@@ -1,0 +1,9 @@
+Package: rospalantir
+Version: 0.1
+Architecture: all
+Maintainer: curranw
+Depends: zenity, bash
+Section: testing
+Priority: optional
+Homepage: http://askubuntu.com
+Description: Beta access for ROSPalantir
