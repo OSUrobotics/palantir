@@ -233,8 +233,8 @@ class Palantir(object):
         level = os.environ['ROS_PALANTIR']
         if level == "None":
             return
-
-
+        user_name_string = os.environ['ROS_PALANTIR_USERNAME']
+        password_string = os.environ['ROS_PALANTIR_PASSWORD']
         self.preprocess_xml()
 
         doc = Document()
@@ -242,14 +242,24 @@ class Palantir(object):
         doc.appendChild(root)
 
         #User Info
+        user = doc.createElement('user')
+        root.appendChild(user)
         if level == "1":
-            user = doc.createElement('user')
-            root.appendChild(user)
             mac = doc.createElement('mac')
             mac_content = doc.createTextNode(str(get_mac()))
             mac.appendChild(mac_content)
             user.appendChild(mac)
+        
+        user_name = doc.createElement('user_name')
+        user_name_content = doc.createTextNode(user_name_string)
+        user_name.appendChild(user_name_content)
+        user.appendChild(user_name)
 
+        password = doc.createElement('password')
+        password_content = doc.createTextNode(password_string)
+        password.appendChild(password_content)
+        user.appendChild(password)        
+        
         #if level == "1" or level == "2":
             #Get IP
 
@@ -330,16 +340,15 @@ class Palantir(object):
 
             launches.appendChild(indvidual_msg)
 
+
         log_dir = rospkg.get_log_dir()
-        date_time = time.strftime("%j-%H-%M-%S")
+        date_time = time.strftime("%Y-%j-%H-%M-%S")
         file_dir = log_dir + "/rospalantir-" + date_time + ".xml"
         f = open(file_dir,'a')
         f.write(doc.toprettyxml(indent="    ", encoding="utf-8"))
         f.close()
         response = os.system('ping -c 1 robotics.oregonstate.edu')
-        #rospy.logerr("GOT HERE")
         if response == 0:
-            rospy.logerr("GOT HERE")
             rp = rospkg.RosPack()
             path = rp.get_path('rospalantir')
             import subprocess
