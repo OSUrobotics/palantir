@@ -10,8 +10,8 @@ Palantir adds the files rosmaster.registration_logger and the rospalantir packag
 How to use: 
 Two installation methods:
 
-1. Clone the github repository and add it to your catkin workspace. Once you perform a catkin_make and source, these packages overwrite the built-in ros_comm.
+1. Clone the github repository and add it to your catkin workspace. Once you perform a catkin_make and source, these packages replace the built-in ros_comm.
 
-2. Add "deb https://github.com/OSUrobotics/palantir-release/raw/master/palantir-0.01/release/ ./" to your sources.list. You can then sudo-apt install python-palantir. It installs palantir to /opt/ros/. In order to use this package, add "opt/ros" to your ROS_PACKAGE_PATH. Add this to your .bashrc for ease.
+2. (Note: This currently does not wire properly due to ROS_PACKAGE_PATH needing to be set. ROS_PACKAGE_PATH is overwritten during a source as of catkin.) Add "deb https://github.com/OSUrobotics/palantir-release/raw/master/palantir-0.01/release/ ./" to your sources.list. You can then sudo-apt install python-palantir. It installs palantir to /opt/ros/. In order to use this package, add "opt/ros" to your ROS_PACKAGE_PATH. Add this to your .bashrc for ease.
 
 Bugs and Ideas/Enhancement reporting: https://github.com/OSUrobotics/palantir/issues
