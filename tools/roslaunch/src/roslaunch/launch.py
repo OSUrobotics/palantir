@@ -474,6 +474,12 @@ class ROSLaunchRunner(object):
             self._launch_executable(e)
     
     def _launch_core_nodes(self):
+        import roslaunch.core
+        import rosmaster.registration_logger
+        m = roslaunch.core.Master()
+        if m.is_running():
+            rosmaster.registration_logger.add_logger('roslaunch')              
+
         """
         launch any core services that are not already running. master must
         be already running
