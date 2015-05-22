@@ -197,8 +197,65 @@ def _validate_args(parser, options, args):
 
     if len([x for x in [options.node_list, options.find_node, options.node_args, options.ros_args] if x]) > 1:
         parser.error("only one of [--nodes, --find-node, --args --ros-args] may be specified")
-    
+
+def _palantir_write(palantir_file_name, input):
+  palantir_file_var = open(palantir_file_name, "w")
+  palantir_file_var.write(input)
+  print("Creating file " + palantir_file_name)
+
+
+def _palantir_check():
+  """
+  Checks whether or not a ~/.ros/palantir_settings file exists.
+  If it does, check the level of opt-in.
+  If it doesn't, see if the user would like to opt-in.
+  """
+  import rospkg
+  import os.path
+  log_dir = rospkg.get_ros_home()
+  palantir_file_name = log_dir + "/palantir_settings"
+  print palantir_file_name
+  if os.path.isfile(palantir_file_name):
+    palantir_file_var = open(palantir_file_name, 'r')
+    contents = palantir_file_var.readline().rstrip()
+    import os
+    print contents
+    os.environ['ROS_PALANTIR'] = contents
+    contents = palantir_file_var.readline().rstrip()
+    os.environ['ROS_PALANTIR_USERNAME'] = contents
+    contents = palantir_file_var.readline().rstrip()
+    os.environ['ROS_PALANTIR_PASSWORD'] = contents
+  else:
+    inquiry_complete = False
+    while not inquiry_complete:
+      print("ROSPalantir is an instrumented version of roscore, the central broker agent at the heart of a ROS system.")
+      print("It allows live usage statistics on nodes and communications to be recorded, saved to disk, and sent back to an aggregating server at Oregon State University.")
+      var = raw_input("Would you like you anonymously log usage statistics? (y/n) ")
+      if var == "y":
+        print("Thank you! What level of usage statistics would you like to log?")
+        print("1:IP Address, MAC Address, and all usage statistics")
+        print("2: IP Address, and all usage statistics")
+        print("3: Just all usage stistics")
+        opt_in_level = raw_input("Which level would you like? (1,2, or 3):")
+        while not inquiry_complete:
+          if opt_in_level == "1" or opt_in_level == "2" or opt_in_level == "3":
+            inquiry_complete = True
+          else:
+            print("Input incorrect")
+        user_name = raw_input("What would you like your user name to be? This is for looking up your own private data in the future.\n")
+        password = raw_input("What would you like password to be? This is not encrypted, do not use a password that you use for important things.\n")
+        file_output = opt_in_level + '\n' + user_name + '\n' + password
+        _palantir_write(palantir_file_name, file_output)
+      
+      elif var == "n":
+        _palantir_write(palantir_file_name, "None")
+        print ("Thank you!")
+        inquiry_complete = True
+      else:
+        print("Input incorrect") 
+
 def main(argv=sys.argv):
+    _palantir_check()
     options = None
     try:
         from . import rlutil
