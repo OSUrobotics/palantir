@@ -7,6 +7,8 @@ Palantir modifies ros_comm that monitors what packages users launch, and records
 Details:
 Palantir adds the files rosmaster.registration_logger and the rospalantir package to the ros_comm infrastructure. The rosmaster.registration_logger class adds a handler to the logger associated with the argument given, and overloads the emit function. This emit function parses the log and publishes data about what had occured, such as registering a publisher/subscriber or launching a node. Rospalantir subscribes to these publishers and stores the data. When the core is killed, this data is then saved in an xml file in .ros/log. The user can opt out at any time by modifying the roscore.xml file and removing the rospalantir package. In this way, rosmaster.registration_logger publishes interesting data, but rospalantir does not store it, it is simply for the users benefit.
 
+When running rospalantir for the first time, run roscore by itself. You will receive some prompts asking how much data you would like to send. These settings are saved in .ros/palantir_settings. Logs that are sent are moved into the .ros/log/sent_logs folder. If you have any privacy concerns, feel free to e-mail me recommendations on how to alleviate them. ROSPalantir is meant to be as transparent as possible. This is an effort to improve the ROS infrastructure, not to nefariously take advantage of private usage data.
+
 How to use: 
 Two installation methods:
 
