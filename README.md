@@ -9,6 +9,8 @@ Palantir adds the files rosmaster.registration_logger and the rospalantir packag
 
 When running rospalantir for the first time, run roscore by itself. You will receive some prompts asking how much data you would like to send. These settings are saved in .ros/palantir_settings. Logs that are sent are moved into the .ros/log/sent_logs folder. If you have any privacy concerns, feel free to e-mail me recommendations on how to alleviate them. ROSPalantir is meant to be as transparent as possible. This is an effort to improve the ROS infrastructure, not to nefariously take advantage of private usage data.
 
+php is required.
+
 How to use: 
 Two installation methods:
 
