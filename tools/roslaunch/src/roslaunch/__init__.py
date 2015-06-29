@@ -222,12 +222,12 @@ def _palantir_check():
   import os.path
   log_dir = rospkg.get_ros_home()
   palantir_file_name = log_dir + "/palantir_settings"
-  print palantir_file_name
+  print(palantir_file_name)
   if os.path.isfile(palantir_file_name):
     palantir_file_var = open(palantir_file_name, 'r')
     contents = palantir_file_var.readline().rstrip()
     import os
-    print contents
+    print(contents)
     os.environ['ROS_PALANTIR'] = contents
     contents = palantir_file_var.readline().rstrip()
     os.environ['ROS_PALANTIR_USERNAME'] = contents
