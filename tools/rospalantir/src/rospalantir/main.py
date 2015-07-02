@@ -347,7 +347,7 @@ class Palantir(object):
         f = open(file_dir,'a')
         f.write(doc.toprettyxml(indent="    ", encoding="utf-8"))
         f.close()
-        response = os.system('ping -c 1 robotics.oregonstate.edu')
+        response = os.system('ping -c 1 google.com')
         if response == 0:
             rp = rospkg.RosPack()
             path = rp.get_path('rospalantir')
