@@ -240,7 +240,7 @@ def _palantir_check():
       print("It allows live usage statistics on nodes and communications to be recorded, saved to disk, and sent back to an aggregating server at Oregon State University.")
       var = raw_input("Would you like you anonymously log usage statistics? (y/n) ")
       if var == "y":
-        print("Thank you! What level of usage statistics would you like to log?")
+        print("Thank you! What level of usage statistics would you like to log? (MAC and IP not currently logged)")
         print("1:IP Address, MAC Address, and all usage statistics")
         print("2: IP Address, and all usage statistics")
         print("3: Just all usage stistics")

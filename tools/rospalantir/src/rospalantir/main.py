@@ -245,11 +245,11 @@ class Palantir(object):
         #User Info
         user = doc.createElement('user')
         root.appendChild(user)
-        if level == "1":
-            mac = doc.createElement('mac')
-            mac_content = doc.createTextNode(str(get_mac()))
-            mac.appendChild(mac_content)
-            user.appendChild(mac)
+        #if level == "1":
+        #    mac = doc.createElement('mac')
+        #    mac_content = doc.createTextNode(str(get_mac()))
+        #    mac.appendChild(mac_content)
+        #    user.appendChild(mac)
         
         user_name = doc.createElement('user_name')
         user_name_content = doc.createTextNode(user_name_string)
