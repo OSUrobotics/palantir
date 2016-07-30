@@ -49,6 +49,8 @@ from roslaunch.core import *
 from roslaunch.node_args import create_local_process_args
 from roslaunch.pmon import Process, FatalProcessLaunch
 
+from rosmaster.master_api import NUM_WORKERS
+
 import logging
 _logger = logging.getLogger("roslaunch")
 
@@ -61,7 +63,7 @@ def _next_counter():
     _counter += 1
     return _counter
 
-def create_master_process(run_id, type_, ros_root, port):
+def create_master_process(run_id, type_, ros_root, port, num_workers=NUM_WORKERS, timeout=None):
     """
     Launch a master
     @param type_: name of master executable (currently just Master.ZENMASTER)
@@ -70,18 +72,24 @@ def create_master_process(run_id, type_, ros_root, port):
     @type  ros_root: str
     @param port: port to launch master on
     @type  port: int
+    @param num_workers: number of worker threads.
+    @type  num_workers: int
+    @param timeout: socket timeout for connections.
+    @type  timeout: float
     @raise RLException: if type_ or port is invalid
     """    
     if port < 1 or port > 65535:
         raise RLException("invalid port assignment: %s"%port)
 
-    _logger.info("create_master_process: %s, %s, %s", type_, ros_root, port)
+    _logger.info("create_master_process: %s, %s, %s, %s, %s", type_, ros_root, port, num_workers, timeout)
     # catkin/fuerte: no longer use ROS_ROOT-relative executables, search path instead
     master = type_
     # zenmaster is deprecated and aliased to rosmaster
     if type_ in [Master.ROSMASTER, Master.ZENMASTER]:        
         package = 'rosmaster'        
-        args = [master, '--core', '-p', str(port)]
+        args = [master, '--core', '-p', str(port), '-w', str(num_workers)]
+        if timeout is not None:
+            args += ['-t', str(timeout)]
     else:
         raise RLException("unknown master typ_: %s"%type_)
 
@@ -215,7 +223,7 @@ class LocalProcess(Process):
                 if e.errno == 13:
                     raise RLException("unable to create directory for log file [%s].\nPlease check permissions."%log_dir)
                 else:
-                    raise RLException("unable to create directory for log file [%s]: %s"%(log_dir, e.msg))
+                    raise RLException("unable to create directory for log file [%s]: %s"%(log_dir, e.strerror))
         # #973: save log dir for error messages
         self.log_dir = log_dir
 
@@ -290,18 +298,18 @@ class LocalProcess(Process):
                 self.popen = subprocess.Popen(self.args, cwd=cwd, stdout=logfileout, stderr=logfileerr, env=full_env, close_fds=True, preexec_fn=os.setsid)
             except OSError as e:
                 self.started = True # must set so is_alive state is correct
-                _logger.error("OSError(%d, %s)", e.errno, e.msg)
-                if errno == 8: #Exec format error
+                _logger.error("OSError(%d, %s)", e.errno, e.strerror)
+                if e.errno == 8: #Exec format error
                     raise FatalProcessLaunch("Unable to launch [%s]. \nIf it is a script, you may be missing a '#!' declaration at the top."%self.name)
-                elif errno == 2: #no such file or directory
+                elif e.errno == 2: #no such file or directory
                     raise FatalProcessLaunch("""Roslaunch got a '%s' error while attempting to run:
 
 %s
 
 Please make sure that all the executables in this command exist and have
-executable permission. This is often caused by a bad launch-prefix."""%(msg, ' '.join(self.args)))
+executable permission. This is often caused by a bad launch-prefix."""%(e.strerror, ' '.join(self.args)))
                 else:
-                    raise FatalProcessLaunch("unable to launch [%s]: %s"%(' '.join(self.args), msg))
+                    raise FatalProcessLaunch("unable to launch [%s]: %s"%(' '.join(self.args), e.strerror))
                 
             self.started = True
             # Check that the process is either still running (poll returns

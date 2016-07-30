@@ -2,6 +2,45 @@
 Changelog for package rosconsole
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.11.20 (2016-06-27)
+--------------------
+
+1.11.19 (2016-04-18)
+--------------------
+* use directory specific compiler flags (`#785 <https://github.com/ros/ros_comm/pull/785>`_)
+
+1.11.18 (2016-03-17)
+--------------------
+* fix compiler warnings
+
+1.11.17 (2016-03-11)
+--------------------
+* use boost::make_shared instead of new for constructing boost::shared_ptr (`#740 <https://github.com/ros/ros_comm/issues/740>`_)
+
+1.11.16 (2015-11-09)
+--------------------
+
+1.11.15 (2015-10-13)
+--------------------
+
+1.11.14 (2015-09-19)
+--------------------
+* avoid redefining ROS_ASSERT_ENABLED (`#628 <https://github.com/ros/ros_comm/pull/628>`_)
+
+1.11.13 (2015-04-28)
+--------------------
+
+1.11.12 (2015-04-27)
+--------------------
+
+1.11.11 (2015-04-16)
+--------------------
+* add DELAYED_THROTTLE versions of log macros (`#571 <https://github.com/ros/ros_comm/issues/571>`_)
+
+1.11.10 (2014-12-22)
+--------------------
+* fix various defects reported by coverity
+
 1.11.9 (2014-08-18)
 -------------------
 
