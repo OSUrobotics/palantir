@@ -28,9 +28,9 @@ class RegistrationHandler(logging.Handler):
         @param logType: Type of log to be a handler of. i.e. 'rosmaster' for topics or 'roslaunch' for nodes.
         """
         if logType == 'rosmaster':
-            self.pub = rospy.Publisher('registration_logger', RegistrationLogger)
+            self.pub = rospy.Publisher('registration_logger', RegistrationLogger, queue_size=100)
         if logType == 'roslaunch':
-            self.pub = rospy.Publisher('launch_logger', LaunchLogger)
+            self.pub = rospy.Publisher('launch_logger', LaunchLogger, queue_size=100)
         rospy.init_node('reg_logger', log_level=rospy.DEBUG, disable_rosout=True, disable_signals=True, anonymous=True)     
     def emit(self, record):
         """

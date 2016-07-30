@@ -357,6 +357,5 @@ class Palantir(object):
 
 if __name__ == "__main__":
     a = Palantir()
-    import atexit
-    atexit.register(a.output_xml)
+    rospy.on_shutdown(a.output_xml)
     rospy.spin()
